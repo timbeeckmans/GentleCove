@@ -11,6 +11,11 @@ BufferLoader.prototype.loadBuffer = function(url) {
 	request.open("GET", url, true);
 	request.responseType = "arraybuffer";
 	var loader = this;
+	$("#file").html("<span id='file'>song</span>");
+	$("#step").html("<span id='step'>1</span>");
+	request.onprogress = function(e){
+  	$("#progress").html("<span id='progress'>"+Math.round(e.loaded/e.totalSize*100)+"</span>");
+	};
 
 	request.onload = function() {
 		loader.context.decodeAudioData(

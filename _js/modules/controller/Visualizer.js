@@ -29,6 +29,7 @@ Visualizer.prototype.update = function(data) {
 
 function initSong(){
 	$("#container").remove();
+	$("body").prepend("<div id='preloader'>loading assets: <span id='file'>starting up</span> <span id='progress'>0</span>% (<span id='step'>0</span>/2) </div>");
 	var context = new AudioContext();
 	player = new Player(context);
 	//laatste parameter is de volgende functie die hij moet uitvoeren

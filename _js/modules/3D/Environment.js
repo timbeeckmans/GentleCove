@@ -35,6 +35,7 @@ function Environment(cubes_in_row, rows, snelheid){
 	ROWS = Math.floor(rows);
 	SNELHEID = snelheid;
 	controls = new ColorSelecter(_newColors, pathColor, cubeColor, bergColor, backgroundColor);
+
 	_loadObj();
   window.addEventListener( 'resize', onWindowResize, false );
 }
@@ -111,7 +112,12 @@ function _loadObj(){
 	//berg inladen
   var manager = new THREE.LoadingManager();
   var loader = new THREE.OBJLoader( manager );
-  var onProgress = function ( xhr ) {};
+  $("#file").html("<span id='file'>mountain</span>");
+	$("#step").html("<span id='step'>2</span>");
+  var onProgress = function ( xhr ) {
+		console.log("update and round");
+  	$("#progress").html("<span id='progress'>"+Math.round(xhr.loaded/xhr.totalSize*100)+"</span>")
+  };
   var onError = function ( xhr ) {};
 
   loader.load( BERG_URL, function ( object ) {
@@ -162,6 +168,7 @@ Environment.prototype.setSpectrum = function(value) {
 };
 
 function _create(){
+	$("#preloader").remove();
 	//opbouwen van de scene
 	scene = new THREE.Scene();
 	scene.fog = new THREE.FogExp2( 0x000000, 0.015 );

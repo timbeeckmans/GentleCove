@@ -79,6 +79,7 @@ function Environment(cubes_in_row, rows, snelheid){
 	ROWS = Math.floor(rows);
 	SNELHEID = snelheid;
 	controls = new ColorSelecter(_newColors, pathColor, cubeColor, bergColor, backgroundColor);
+
 	_loadObj();
   window.addEventListener( 'resize', onWindowResize, false );
 }
@@ -155,7 +156,12 @@ function _loadObj(){
 	//berg inladen
   var manager = new THREE.LoadingManager();
   var loader = new THREE.OBJLoader( manager );
-  var onProgress = function ( xhr ) {};
+  $("#file").html("<span id='file'>mountain</span>");
+	$("#step").html("<span id='step'>2</span>");
+  var onProgress = function ( xhr ) {
+		console.log("update and round");
+  	$("#progress").html("<span id='progress'>"+Math.round(xhr.loaded/xhr.totalSize*100)+"</span>")
+  };
   var onError = function ( xhr ) {};
 
   loader.load( BERG_URL, function ( object ) {
@@ -206,6 +212,7 @@ Environment.prototype.setSpectrum = function(value) {
 };
 
 function _create(){
+	$("#preloader").remove();
 	//opbouwen van de scene
 	scene = new THREE.Scene();
 	scene.fog = new THREE.FogExp2( 0x000000, 0.015 );
@@ -843,6 +850,7 @@ Visualizer.prototype.update = function(data) {
 
 function initSong(){
 	$("#container").remove();
+	$("body").prepend("<div id='preloader'>loading assets: <span id='file'>starting up</span> <span id='progress'>0</span>% (<span id='step'>0</span>/2) </div>");
 	var context = new AudioContext();
 	player = new Player(context);
 	//laatste parameter is de volgende functie die hij moet uitvoeren
@@ -888,6 +896,11 @@ BufferLoader.prototype.loadBuffer = function(url) {
 	request.open("GET", url, true);
 	request.responseType = "arraybuffer";
 	var loader = this;
+	$("#file").html("<span id='file'>song</span>");
+	$("#step").html("<span id='step'>1</span>");
+	request.onprogress = function(e){
+  	$("#progress").html("<span id='progress'>"+Math.round(e.loaded/e.totalSize*100)+"</span>");
+	};
 
 	request.onload = function() {
 		loader.context.decodeAudioData(

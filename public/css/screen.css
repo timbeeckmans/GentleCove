@@ -109,7 +109,7 @@ body {
   height: 653px;
   z-index: 0; }
 
-#container {
+#container, #preloader {
   height: 200px;
   width: 50%;
   margin: 200px auto 0;
