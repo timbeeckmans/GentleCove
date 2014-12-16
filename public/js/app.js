@@ -277,7 +277,7 @@ function _create(){
 	scene.add( floor );
 
 	//pad
-	geometry = new THREE.PlaneGeometry( 1, 1000, 0, 300 );
+	geometry = new THREE.PlaneGeometry( 1.3, 1000, 0, 300 );
 	path = new THREE.Mesh( geometry, Materials.GREEN_WIREFRAME_MATERIAL );
 
 	path.rotation.x = 1.57;
@@ -313,7 +313,7 @@ function _animateBerg(berg, index, mr){
 	berg.rotation.y += spectrum[100] / 4000 * mr;
 
 	var doel = spectrum[berg.index] / 127.5;
-	doel += 2.5;
+	doel += 2.0;
 	berg.scale.y += (doel - berg.scale.y) * 0.15;
 
 }
