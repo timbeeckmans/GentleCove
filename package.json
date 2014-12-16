@@ -26,8 +26,7 @@
     "forever": "^0.13.0",
     "express-handlebars": "~1.1.0",
     "method-override": "^2.3.0",
-    "socket.io": "~1.2.1",
-    "underscore": "~1.7.0"
+    "socket.io": "~1.2.1"
   },
   "repository": {
     "type": "git"
