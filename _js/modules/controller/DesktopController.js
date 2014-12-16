@@ -26,7 +26,7 @@ function _onSocketId(id){
 
 	//verwijder de "wacht op connectie" boodschap
 	$("#not-connected").remove();
-	$("#container").prepend("<p>Your ID is <span id='peerid'>"+id+"</span>. Browse to </br><a class='link'>localhost:3000/mobile/"+id+"</a></br><span class='or-margin'>or</span><p>");
+	$("#container").prepend("<p>Your ID is <span id='peerid'>"+id+"</span>. Browse to </br><a class='link'>https://gentle-cove-8440.herokuapp.com/mobile/"+id+"</a></br><span class='or-margin'>or</span><p>");
 }
 
 function _onFoundMobileDevice(id){}
