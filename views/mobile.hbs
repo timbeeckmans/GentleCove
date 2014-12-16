@@ -1,0 +1,29 @@
+{{#section "headers"}}
+	<link rel="stylesheet" href="../css/screen.css"/>
+{{/section}}
+<body class="mobile">
+	<div id="bg1">&nbsp;</div>
+	<div id="bg2">&nbsp;</div>
+	<div id="container">
+		<div id="not-started">
+			<p>
+				Rotate your device to portrait mode, with the bottom side to the right.
+			</p>
+			<img src="../images/mobile.gif" alt="rotate your device" width="74.5" height="43"/>
+			<input type="button" id="btnStart" value="Start"/>
+			<p>
+				connected to: <span id="connection-id">{{id}}</span>
+			</p>
+
+		</div>
+	</div>
+{{#section "scripts"}}
+	<script src="../js/vendor.js"></script>
+	<script src="../socket.io/socket.io.js"></script>
+	<script src="../js/app.js"></script>
+	<script>
+		console.log("scripts mobile");
+		window.initMobileController();
+	</script>
+{{/section}}
+

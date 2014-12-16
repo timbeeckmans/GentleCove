@@ -1,0 +1,135 @@
+<script id="fragment_shader4" type="x-shader/x-fragment">
+
+	uniform float time;
+	uniform float mr;
+	uniform float mg;
+	uniform float mb;
+	uniform vec2 resolution;
+
+	varying vec2 vUv;
+
+	float r = mr;
+	float g = mg;
+	float b = mb;
+
+	void black( void ) {
+		r = 0.0;
+		g = 0.0;
+		b = 0.0;
+	}
+
+	void main( void ) {
+
+		vec2 position = -1.0 + 2.0 * vUv;
+
+		float strength = floor((position.y)*10.0)/10.0;
+		float interval = mod(time/5.0, 2.0);
+
+		//laatste halve lijn
+		if(interval - position.y -0.25 < 1.0){
+
+			if(interval - position.y -0.25 > 0.99){
+				black();
+			}
+		}
+
+		if(interval - position.y -0.5 < 1.0){
+
+			if(interval - position.y -0.5 > 0.96){
+				r = 0.0;
+				g = 0.0;
+				b = 0.0;
+			}
+		}
+
+		if(interval - position.y -0.75 < 1.0){
+
+			if(interval - position.y -0.75 > 0.98){
+				r = 0.0;
+				g = 0.0;
+				b = 0.0;
+			}
+		}
+
+		//eerste volledige lijn
+		if(interval - position.y < 1.0){
+
+			if(interval - position.y > 0.97){
+				r = 0.0;
+				g = 0.0;
+				b = 0.0;
+			}
+		}
+
+		if(interval - position.y +0.25 < 1.0){
+
+			if(interval - position.y +0.25 > 0.98){
+				r = 0.0;
+				g = 0.0;
+				b = 0.0;
+			}
+		}
+
+		//2de
+		if(interval - position.y +0.5 < 1.0){
+
+			if(interval - position.y +0.5 > 0.97){
+				r = 0.0;
+				g = 0.0;
+				b = 0.0;
+			}
+		}
+
+		if(interval - position.y +0.75 < 1.0){
+
+			if(interval - position.y +0.75 > 0.98){
+				r = 0.0;
+				g = 0.0;
+				b = 0.0;
+			}
+		}
+
+		//3de
+		if(interval - position.y +1.0 < 1.0){
+
+			if(interval - position.y +1.0 > 0.99){
+				r = 0.0;
+				g = 0.0;
+				b = 0.0;
+			}
+		}
+
+		if(interval - position.y +1.25 < 1.0){
+
+			if(interval - position.y +1.25 > 0.98){
+				r = 0.0;
+				g = 0.0;
+				b = 0.0;
+			}
+		}
+
+		//eerste halve lijn
+		if(interval - position.y +1.5 < 1.0){
+
+			if(interval - position.y +1.5 > 0.96){
+				r = 0.0;
+				g = 0.0;
+				b = 0.0;
+			}
+		}
+
+		if(interval - position.y +1.75 < 1.0){
+
+			if(interval - position.y +1.75 > 0.99){
+				r = 0.0;
+				g = 0.0;
+				b = 0.0;
+			}
+		}
+
+		r += abs(sin(time))* abs(sin(time)) / 50.0;
+		gl_FragColor = vec4( r * strength, g * strength, b * strength, 1.0 );
+
+	}
+
+</script>

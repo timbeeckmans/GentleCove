@@ -1,0 +1,35 @@
+{
+  "stylesheets": {
+    "src":{
+      "folder": "./_scss",
+      "file":"**/*.scss"
+    },
+    "dest": {
+      "folder":"./public/css",
+      "file":"screen.css"
+    }
+  },
+  "fonts": {
+    "dest": {
+      "folder":"./public/fonts"
+    }
+  },
+  "scripts": {
+    "src":{
+      "folder": "./_js",
+      "file": "*.js"
+    },
+    "dest": {
+      "folder":"./public/js"
+    }
+  },
+  "vendor": {
+    "src": {
+      "folder": "./bower_components",
+      "file": "**"
+    },
+    "dest": {
+      "file": "vendor.js"
+    }
+  }
+}

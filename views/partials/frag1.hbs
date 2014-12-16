@@ -1,0 +1,86 @@
+	<script id="fragment_shader1" type="x-shader/x-fragment">
+
+
+		uniform float time;
+		uniform float mr;
+		uniform float mg;
+		uniform float mb;
+		uniform vec2 resolution;
+
+		varying vec2 vUv;
+
+
+		void main( void ) {
+
+			vec2 position = -1.0 + (2.0 * vUv);
+
+			//float red = abs( sin( position.x * position.y) );
+			//float green = abs( sin( position.x * position.y) );
+			//float blue = abs( sin( position.x * position.y) );
+			float originalGreen = 0.0;
+			float strength = 0.0;
+			float red = 0.0;
+			float blue = 0.0;
+			float size = 0.5;
+
+			if(abs( sin( position.x * position.y)) > size){
+				//0.7 tot 1
+				float distance = abs( sin( position.x * position.y)) - 0.7;
+				strength = distance * 10.0;
+				//strength = 1.0;
+				if(strength < 0.0){
+					strength = originalGreen;
+				}
+			}
+
+			if(position.x > 0.95){
+				strength = strength + (abs(position.x) - 0.95) * 20.0;
+			}
+			if(position.x < -0.95){
+				strength = strength + (abs(position.x) - 0.95) * 20.0;
+			}
+			if(position.y > 0.95){
+				strength = strength + (abs(position.y) - 0.95) * 20.0;
+			}
+			if(position.y < -0.95){
+				strength = strength + (abs(position.y) - 0.95) * 20.0;
+			}
+
+			float white = strength*strength / 5.0;
+			float r = strength*mr+white;
+			float g = strength*mg+white;
+			float b = strength*mb+white;
+
+			if(mr > 1.0) {
+				r = strength*1.0+white;
+			}
+			if(mg > 1.0) {
+				g = strength*1.0+white;
+			}
+			if(mb > 1.0) {
+				b = strength*1.0+white;
+			}
+
+			if(mr < 0.0) {
+				r = strength*0.0+white;
+			}
+			if(mg < 0.0) {
+				g = strength*0.0+white;
+			}
+			if(mb < 0.0) {
+				b = strength*0.0+white;
+			}
+
+			strength = strength + (abs(sin(time)) * abs(sin(time)) / 10.0);
+
+			gl_FragColor = vec4( r, g, b, 1.0 );
+
+		}
+		/*
+
+
+
+
+			gl_FragColor = vec4(r, g, b, 1.0);
+*/
+	</script>

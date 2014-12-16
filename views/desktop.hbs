@@ -1,0 +1,26 @@
+{{#section "shaders"}}
+	{{> vertex}}
+	{{> frag1}}
+	{{> frag4}}
+{{/section}}
+{{#section "headers"}}
+	<link rel="stylesheet" href="css/screen.css"/>
+{{/section}}
+<body class="desktop">
+	<div id="container">
+		<div id="not-connected">
+			<p>
+				Waiting for connection.
+			</p>
+		</div>
+		<a class="btn" href="/visualisation">
+			Continue without a mobile device.
+		</a>
+	</div>
+	<div id="bg">&nbsp;</div>
+	<footer>&nbsp;</footer>
+{{#section "scripts"}}
+	<script src="js/vendor.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="js/app.js"></script>
+{{/section}}

@@ -1,0 +1,12 @@
+# https://github.com/causes/scss-lint/blob/master/lib/scss_lint/linter/README.md
+# https://github.com/causes/scss-lint/blob/master/config/default.yml
+
+linters:
+  PropertySortOrder:
+    enabled: false
+
+  Indentation:
+    enabled: true
+    character: tab
+    width: 1
+

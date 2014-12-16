@@ -1,0 +1,60 @@
+{{#section "shaders"}}
+	{{> vertex}}
+	{{> frag1}}
+	{{> frag4}}
+{{/section}}
+{{#section "headers"}}
+	<link rel="stylesheet" href="{{#if id}}../{{/if}}css/screen.css"/>
+{{/section}}
+<body class="desktop">
+	<section id="controls">
+		<header>
+			<h1>Colors</h1>
+		</header>
+		<div class="input">
+			<header>
+				<h1>Path:</h1>
+			</header>
+			<input id="sliderPath" type ="range" min ="0" max="29" step ="1" value ="10"/>
+		</div>
+
+		<div class="input">
+			<header>
+				<h1>Cubes:</h1>
+			</header>
+			<input id="sliderCubes" type ="range" min ="0" max="29" step ="1" value ="10"/>
+		</div>
+
+		<div class="input">
+			<header>
+				<h1>Berg:</h1>
+			</header>
+			<input id="sliderBerg" type ="range" min ="0" max="29" step ="1" value ="15"/>
+		</div>
+
+		<div class="input">
+			<header>
+				<h1>Background:</h1>
+			</header>
+			<input id="sliderBackground" type ="range" min ="0" max="29" step ="1" value ="25"/>
+		</div>
+
+	</section>
+	<div id="container">
+	</div>
+{{#section "scripts"}}
+	<script src="{{#if id}}../{{/if}}js/vendor.js"></script>
+	<script src="{{#if id}}../{{/if}}socket.io/socket.io.js"></script>
+	<script src="{{#if id}}../{{/if}}js/app.js"></script>
+		{{#if noId}}
+		<script>
+			window.initVisualisation();
+		</script>
+	{{/if}}
+	{{#if id}}
+		<script>
+			window.initVisualisation();
+		</script>
+	{{/if}}
+
+{{/section}}
