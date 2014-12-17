@@ -4,6 +4,7 @@
 var OBJLoader = require("../util/OBJLoader");
 var Materials = require("./Materials");
 var ColorSelecter = require("../controller/ColorSelecter");
+var KonamiDetecter = require("../util/KonamiDetecter")
 
 //data
 var _rotationData, last_cube_pos, startPos;
@@ -18,13 +19,14 @@ var backgroundColor = 25;
 var didStart, created;
 
 //objecten
-var floor, skyBox, camera, scene, renderer, path, geometry, controls;
+var floor, skyBox, camera, scene, renderer, path, geometry, controls, konamiDetecter, neo;
 
 //arrays
 var bergen, cubes, particles, spectrum;
 
 //constants
 var BERG_URL = 'models/berg.obj';
+var NEO_URL = 'models/neo2.obj';
 var CUBES_IN_ROW, ROWS, SNELHEID;
 
 function Environment(cubes_in_row, rows, snelheid){
@@ -146,6 +148,27 @@ function _loadObj(){
     for (var i = 0; i < bergen.length; i++) {
     	bergen[i].index = Math.floor(Math.random()*175);
     }
+    _loadNeo();
+	}, onProgress, onError );
+}
+
+function _loadNeo(){
+	var manager = new THREE.LoadingManager();
+  var loader = new THREE.OBJLoader( manager );
+  $("#file").html("<span id='file'>neo</span>");
+	$("#step").html("<span id='step'>3</span>");
+  var onProgress = function ( xhr ) {
+		console.log("update and round");
+  	$("#progress").html("<span id='progress'>"+Math.round(xhr.loaded/xhr.totalSize*100)+"</span>")
+  };
+  var onError = function ( xhr ) {};
+	loader.load( NEO_URL, function ( object ) {
+    object.traverse( function ( child ) {
+      if ( child instanceof THREE.Mesh ) {
+        child.material = Materials.CYAN_MATERIAL;
+      }
+    });
+    neo = object;
     _create();
 	}, onProgress, onError );
 }
@@ -240,7 +263,7 @@ function _create(){
 	scene.add( floor );
 
 	//pad
-	geometry = new THREE.PlaneGeometry( 1.3, 1000, 0, 300 );
+	geometry = new THREE.PlaneGeometry( 2.0, 1000, 0, 300 );
 	path = new THREE.Mesh( geometry, Materials.GREEN_WIREFRAME_MATERIAL );
 
 	path.rotation.x = 1.57;
@@ -250,6 +273,24 @@ function _create(){
 	scene.add( path );
 
 	created = true;
+	konamiDetecter = new KonamiDetecter();
+	konamiDetecter.onKonami(_konamiHandler);
+}
+
+function _konamiHandler(){
+	$("#sliderPath").val(10).change();
+	$("#sliderCubes").val(10).change();
+	$("#sliderBerg").val(10).change();
+	$("#sliderBackground").val(10).change();
+	pathColor = 10;
+	bergColor = 10;
+	cubeColor = 10;
+	backgroundColor = 10;
+
+	neo.position.x = 0;
+	neo.position.y = 0;
+	neo.position.z = -5;
+	scene.add(neo);
 }
 
 function _positionParticle(particle){
@@ -345,7 +386,6 @@ function _render() {
 			particles[i].position.z = last_cube_pos;
 		}
 	}
-
 
 	//animatie pad
 	path.position.z += SNELHEID;

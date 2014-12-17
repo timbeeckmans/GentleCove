@@ -48,6 +48,7 @@ window.initMobileController = function(){
 var OBJLoader = require("../util/OBJLoader");
 var Materials = require("./Materials");
 var ColorSelecter = require("../controller/ColorSelecter");
+var KonamiDetecter = require("../util/KonamiDetecter")
 
 //data
 var _rotationData, last_cube_pos, startPos;
@@ -62,13 +63,14 @@ var backgroundColor = 25;
 var didStart, created;
 
 //objecten
-var floor, skyBox, camera, scene, renderer, path, geometry, controls;
+var floor, skyBox, camera, scene, renderer, path, geometry, controls, konamiDetecter, neo;
 
 //arrays
 var bergen, cubes, particles, spectrum;
 
 //constants
 var BERG_URL = 'models/berg.obj';
+var NEO_URL = 'models/neo2.obj';
 var CUBES_IN_ROW, ROWS, SNELHEID;
 
 function Environment(cubes_in_row, rows, snelheid){
@@ -190,6 +192,27 @@ function _loadObj(){
     for (var i = 0; i < bergen.length; i++) {
     	bergen[i].index = Math.floor(Math.random()*175);
     }
+    _loadNeo();
+	}, onProgress, onError );
+}
+
+function _loadNeo(){
+	var manager = new THREE.LoadingManager();
+  var loader = new THREE.OBJLoader( manager );
+  $("#file").html("<span id='file'>neo</span>");
+	$("#step").html("<span id='step'>3</span>");
+  var onProgress = function ( xhr ) {
+		console.log("update and round");
+  	$("#progress").html("<span id='progress'>"+Math.round(xhr.loaded/xhr.totalSize*100)+"</span>")
+  };
+  var onError = function ( xhr ) {};
+	loader.load( NEO_URL, function ( object ) {
+    object.traverse( function ( child ) {
+      if ( child instanceof THREE.Mesh ) {
+        child.material = Materials.CYAN_MATERIAL;
+      }
+    });
+    neo = object;
     _create();
 	}, onProgress, onError );
 }
@@ -284,7 +307,7 @@ function _create(){
 	scene.add( floor );
 
 	//pad
-	geometry = new THREE.PlaneGeometry( 1.3, 1000, 0, 300 );
+	geometry = new THREE.PlaneGeometry( 2.0, 1000, 0, 300 );
 	path = new THREE.Mesh( geometry, Materials.GREEN_WIREFRAME_MATERIAL );
 
 	path.rotation.x = 1.57;
@@ -294,6 +317,24 @@ function _create(){
 	scene.add( path );
 
 	created = true;
+	konamiDetecter = new KonamiDetecter();
+	konamiDetecter.onKonami(_konamiHandler);
+}
+
+function _konamiHandler(){
+	$("#sliderPath").val(10).change();
+	$("#sliderCubes").val(10).change();
+	$("#sliderBerg").val(10).change();
+	$("#sliderBackground").val(10).change();
+	pathColor = 10;
+	bergColor = 10;
+	cubeColor = 10;
+	backgroundColor = 10;
+
+	neo.position.x = 0;
+	neo.position.y = 0;
+	neo.position.z = -5;
+	scene.add(neo);
 }
 
 function _positionParticle(particle){
@@ -390,7 +431,6 @@ function _render() {
 		}
 	}
 
-
 	//animatie pad
 	path.position.z += SNELHEID;
 	if(path.position.z > -250 + 1000/300){
@@ -405,7 +445,7 @@ function _render() {
 
 module.exports = Environment;
 
-},{"../controller/ColorSelecter":"/Users/Tim/Desktop/Howest/2014-2015/semester 1/RMD III/opdracht/code/_js/modules/controller/ColorSelecter.js","../util/OBJLoader":"/Users/Tim/Desktop/Howest/2014-2015/semester 1/RMD III/opdracht/code/_js/modules/util/OBJLoader.js","./Materials":"/Users/Tim/Desktop/Howest/2014-2015/semester 1/RMD III/opdracht/code/_js/modules/3D/Materials.js"}],"/Users/Tim/Desktop/Howest/2014-2015/semester 1/RMD III/opdracht/code/_js/modules/3D/Materials.js":[function(require,module,exports){
+},{"../controller/ColorSelecter":"/Users/Tim/Desktop/Howest/2014-2015/semester 1/RMD III/opdracht/code/_js/modules/controller/ColorSelecter.js","../util/KonamiDetecter":"/Users/Tim/Desktop/Howest/2014-2015/semester 1/RMD III/opdracht/code/_js/modules/util/KonamiDetecter.js","../util/OBJLoader":"/Users/Tim/Desktop/Howest/2014-2015/semester 1/RMD III/opdracht/code/_js/modules/util/OBJLoader.js","./Materials":"/Users/Tim/Desktop/Howest/2014-2015/semester 1/RMD III/opdracht/code/_js/modules/3D/Materials.js"}],"/Users/Tim/Desktop/Howest/2014-2015/semester 1/RMD III/opdracht/code/_js/modules/3D/Materials.js":[function(require,module,exports){
 /* globals THREE:true */
 
 function Materials(){}
@@ -850,7 +890,7 @@ Visualizer.prototype.update = function(data) {
 
 function initSong(){
 	$("#container").remove();
-	$("body").prepend("<div id='preloader'>loading assets: <span id='file'>starting up</span> <span id='progress'>0</span>% (<span id='step'>0</span>/2) </div>");
+	$("body").prepend("<div id='preloader'>loading assets: <span id='file'>starting up</span> <span id='progress'>0</span>% (<span id='step'>0</span>/3) </div>");
 	var context = new AudioContext();
 	player = new Player(context);
 	//laatste parameter is de volgende functie die hij moet uitvoeren
@@ -1017,6 +1057,42 @@ Colors.presets = [
 ];
 
 module.exports = Colors;
+
+},{}],"/Users/Tim/Desktop/Howest/2014-2015/semester 1/RMD III/opdracht/code/_js/modules/util/KonamiDetecter.js":[function(require,module,exports){
+var _callback;
+
+var konami = [38,38,40,40,37,39,37,39,66,65];
+var pressedKeys;
+
+function KonamiDetecter(){
+	pressedKeys = [];
+}
+
+function keyupHandler(e){
+	pressedKeys.push(e.keyCode);
+	var error = false;
+	if(konami.length > pressedKeys.length){
+		error = true;
+	}
+	for (var i = 0; i < pressedKeys.length; i++) {
+		if(pressedKeys[i] !== konami[i]){
+			error = true;
+			pressedKeys = [];
+		}
+	}
+	if(!error){
+		_callback();
+		$(window).off("keyup", keyupHandler);
+		pressedKeys = [];
+	}
+}
+
+KonamiDetecter.prototype.onKonami = function(callback) {
+	$(window).on("keyup", keyupHandler);
+	_callback = callback;
+};
+
+module.exports = KonamiDetecter;
 
 },{}],"/Users/Tim/Desktop/Howest/2014-2015/semester 1/RMD III/opdracht/code/_js/modules/util/OBJLoader.js":[function(require,module,exports){
 /* globals THREE:true */
