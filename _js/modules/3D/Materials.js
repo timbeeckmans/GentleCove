@@ -51,6 +51,8 @@ Materials.CHANGE_BACKGROUND = function(r, g, b){
 	uniformsBackground.mb.value = b;
 };
 
+Materials.NEO_MATERIAL = new THREE.MeshBasicMaterial( { color: 0x00ff00} );
+
 Materials.CYAN_MATERIAL = new THREE.MeshBasicMaterial( { color: 0x00ffff} );
 Materials.CYAN_COLOR = {r: 0, g: 1, b:1};
 

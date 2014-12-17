@@ -165,7 +165,7 @@ function _loadNeo(){
 	loader.load( NEO_URL, function ( object ) {
     object.traverse( function ( child ) {
       if ( child instanceof THREE.Mesh ) {
-        child.material = Materials.CYAN_MATERIAL;
+        child.material = Materials.NEO_MATERIAL;
       }
     });
     neo = object;
